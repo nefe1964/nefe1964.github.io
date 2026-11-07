@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f2430">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Le mie app</title>
+<style>
+:root{--bg:#f3f4f7;--card:#fff;--ink:#1b1e27;--mute:#6b7280;--line:#e3e5ea;--bar:#1f2430;--barink:#fff;--accent:#3b82f6;--danger:#e5484d}
+@media (prefers-color-scheme:dark){:root{--bg:#111318;--card:#1c1f27;--ink:#eef0f4;--mute:#9aa1ad;--line:#2b2f3a;--bar:#0b0d11}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+header{background:var(--bar);color:var(--barink);padding:calc(14px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:2}
+header h1{flex:1;margin:0;font-size:20px;font-weight:650}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:none;color:inherit;display:grid;place-items:center;cursor:pointer}
+.ib:active{background:rgba(255,255,255,.12)}
+.ib svg{width:22px;height:22px;fill:currentColor}
+.search{padding:12px 14px 0}
+.search input{width:100%;font:inherit;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:18px 10px;padding:20px 14px calc(30px + env(safe-area-inset-bottom))}
+.app{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:var(--ink);text-align:center}
+.app .ic{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:32px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.app:active .ic{transform:scale(.93)}
+.app .nm{font-size:13px;line-height:1.2;max-width:92px}
+.empty,.status{text-align:center;color:var(--mute);font-size:13px;padding:10px 20px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.ov.show{display:flex}
+.sh{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom))}
+.sh h2{margin:0 0 6px;font-size:18px}
+.menu button,.menu label{display:flex;align-items:center;gap:14px;width:100%;padding:14px 4px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.menu .dz{color:var(--danger)}
+.info{color:var(--mute);font-size:13px;line-height:1.5;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:var(--bar);color:var(--barink);padding:10px 16px;border-radius:10px;font-size:14px;z-index:40;display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Le mie app</h1>
+  <button class="ib" id="bMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+</header>
+<div class="search"><input id="q" type="search" placeholder="Cerca un'app"></div>
+<div class="grid" id="grid"></div>
+<div class="status" id="status"></div>
+<div class="ov" id="ov"><div class="sh" id="sh"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept="application/json,.json" hidden>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let APPS=[];
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2200)}
+
+async function loadApps(){
+  let list=null;
+  try{const r=await fetch('apps.json',{cache:'no-store'});if(r.ok)list=await r.json()}catch(e){}
+  if(!list){try{const r=await caches.match('apps.json');if(r)list=await r.json()}catch(e){}}
+  APPS=Array.isArray(list)?list:[];
+  render();
+  // tiene in memoria tutte le app per l'uso offline
+  if('caches' in window&&navigator.onLine){
+    try{const c=await caches.open('app-contenuti');await c.addAll(['./','index.html','apps.json',...APPS.map(a=>'apps/'+a.file)]);$('status').textContent='Pronte anche offline · '+APPS.length+' app'}catch(e){}
+  }else if(!navigator.onLine){$('status').textContent='Sei offline, uso la copia salvata'}
+}
+function render(){
+  const q=$('q').value.trim().toLowerCase();
+  const l=APPS.filter(a=>!q||(a.nome+' '+(a.descrizione||'')).toLowerCase().includes(q));
+  $('grid').innerHTML=l.length?l.map(a=>`<a class="app" href="apps/${encodeURIComponent(a.file)}" title="${esc(a.descrizione||'')}"><span class="ic" style="background:${esc(a.colore||'#3b82f6')}">${esc(a.icona||'📱')}</span><span class="nm">${esc(a.nome)}</span></a>`).join(''):'<div class="empty" style="grid-column:1/-1">Nessuna app trovata.</div>';
+}
+$('q').oninput=render;
+
+/* menu */
+function sheet(h,m){$('sh').innerHTML=h;$('ov').classList.add('show');m&&m($('sh'))}
+function close(){$('ov').classList.remove('show')}
+$('ov').onclick=e=>{if(e.target.id==='ov')close()};
+$('bMenu').onclick=()=>sheet(`<h2>Menu</h2><div class="menu">
+  <button id="mBk">💾 Scarica backup di tutte le app</button>
+  <button id="mRs">📥 Ripristina da file di backup</button>
+  <button id="mUp">🔄 Aggiorna le app</button>
+  </div><div class="info">Il backup salva in un file i dati di tutte le app (contatori, impostazioni). Conservalo su Drive. I dati restano solo su questo telefono finché non fai il backup.</div>`,s=>{
+  s.querySelector('#mBk').onclick=backup;
+  s.querySelector('#mRs').onclick=()=>{close();$('fileIn').click()};
+  s.querySelector('#mUp').onclick=async()=>{close();try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));const r=await navigator.serviceWorker.getRegistration();r&&await r.update()}catch(e){}location.reload()};
+});
+
+function backup(){
+  const d={tipo:'backup-app',data:new Date().toISOString(),dati:{}};
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);d.dati[k]=localStorage.getItem(k)}}catch(e){}
+  const blob=new Blob([JSON.stringify(d)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='backup-app-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();a.remove();close();toast('Backup scaricato nella cartella Download');
+}
+$('fileIn').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{const d=JSON.parse(await f.text());if(d.tipo!=='backup-app'||!d.dati)throw 0;
+    sheet(`<h2>Ripristinare il backup?</h2><div class="info">Backup del ${esc(new Date(d.data).toLocaleString('it-IT'))}. I dati attuali delle app saranno sostituiti.</div><div class="menu"><button id="ok">✔ Ripristina</button><button id="no" class="dz">Annulla</button></div>`,s=>{
+      s.querySelector('#no').onclick=close;
+      s.querySelector('#ok').onclick=()=>{try{Object.entries(d.dati).forEach(([k,v])=>localStorage.setItem(k,v))}catch(x){}close();toast('Dati ripristinati')};
+    });
+  }catch(x){toast('File di backup non valido')}
+  e.target.value='';
+};
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+loadApps();
+</script>
+</body>
+</html>
