@@ -1,0 +1,13 @@
+{
+  "addons": {
+    "copia-gmail@nefe1964.github.io": {
+      "updates": [
+        {
+          "version": "2.0.1",
+          "update_link": "https://nefe1964.github.io/thunderbird/copia-gmail/copia-gmail-2.0.1.xpi",
+          "applications": { "gecko": { "strict_min_version": "140.0" } }
+        }
+      ]
+    }
+  }
+}
