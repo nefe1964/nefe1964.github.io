@@ -28,6 +28,15 @@
               "strict_min_version": "140.0"
             }
           }
+        },
+        {
+          "version": "2.2.1",
+          "update_link": "https://nefe1964.github.io/thunderbird/copia-gmail/copia-gmail-2.2.1.xpi",
+          "applications": {
+            "gecko": {
+              "strict_min_version": "140.0"
+            }
+          }
         }
       ]
     }
