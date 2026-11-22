@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="utf-8">
+<!-- saved from url=(0051)https://nefe1964.github.io/apps/multicontatore.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#1f2430">
 <meta name="mobile-web-app-capable" content="yes">
@@ -109,24 +109,51 @@ main{padding:8px 10px 110px}
 <body>
 <header>
   <div class="top">
-    <h1 id="title">Multicontatore</h1>
-    <button class="ib" id="bView" aria-label="Vista"><svg viewBox="0 0 24 24"><path id="viewIco" d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg></button>
-    <button class="ib" id="bMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+    <h1 id="title">Generale</h1>
+    <button class="ib" id="bView" aria-label="Vista"><svg viewBox="0 0 24 24"><path id="viewIco" d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"></path></svg></button>
+    <button class="ib" id="bMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg></button>
   </div>
-  <div class="tabs" id="tabs"></div>
+  <div class="tabs" id="tabs"><button class="tab on" data-g="g1">Generale <small style="opacity:.6">3</small></button><button class="tab add" data-g="+">＋ Gruppo</button></div>
 </header>
-<div class="sum" id="sum"></div>
-<main><div class="list" id="list"></div></main>
+<div class="sum" id="sum"><span>3 contatori</span><span>Totale <b style="color:var(--ink)">0</b></span></div>
+<main><div class="list" id="list"><div class="c " data-id="mws283sdmsze">
+      <span class="stripe" style="background:#3b82f6"></span>
+      <div class="row"><button class="btn" data-a="-" style="color:#3b82f6">−</button></div>
+      <div class="mid" data-a="open">
+        <div class="nm">Visitatori</div>
+        <div class="val" id="v_mws283sdmsze">0</div>
+        
+      </div>
+      <div class="row"><button class="btn" data-a="+" style="color:#3b82f6">+</button></div>
+    </div><div class="c " data-id="mws283sdx1h8">
+      <span class="stripe" style="background:#22c55e"></span>
+      <div class="row"><button class="btn" data-a="-" style="color:#22c55e">−</button></div>
+      <div class="mid" data-a="open">
+        <div class="nm">Ripetizioni</div>
+        <div class="val" id="v_mws283sdx1h8">0</div>
+        <div class="prog"><i style="width:0%;background:#22c55e"></i></div><div class="tg">0% di 50</div>
+      </div>
+      <div class="row"><button class="btn" data-a="+" style="color:#22c55e">+</button></div>
+    </div><div class="c " data-id="mws283sdcovw">
+      <span class="stripe" style="background:#f59e0b"></span>
+      <div class="row"><button class="btn" data-a="-" style="color:#f59e0b">−</button></div>
+      <div class="mid" data-a="open">
+        <div class="nm">Scorte</div>
+        <div class="val" id="v_mws283sdcovw">0</div>
+        
+      </div>
+      <div class="row"><button class="btn" data-a="+" style="color:#f59e0b">+</button></div>
+    </div></div></main>
 <button class="fab" id="fab" aria-label="Nuovo contatore">+</button>
 <div class="undo" id="undo"><span id="undoTxt"></span><b id="undoBtn">ANNULLA</b></div>
 <div class="toast" id="toast"></div>
 
 <div class="fs" id="fs">
   <div class="fh">
-    <button class="ib" id="fsBack"><svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg></button>
+    <button class="ib" id="fsBack"><svg viewBox="0 0 24 24"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"></path></svg></button>
     <h3 id="fsName"></h3>
-    <button class="ib" id="fsHist"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l4 4 4-4H6a7 7 0 1 1 2.05 4.95l-1.42 1.42A9 9 0 1 0 13 3zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg></button>
-    <button class="ib" id="fsEdit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75zM20.7 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"/></svg></button>
+    <button class="ib" id="fsHist"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l4 4 4-4H6a7 7 0 1 1 2.05 4.95l-1.42 1.42A9 9 0 1 0 13 3zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"></path></svg></button>
+    <button class="ib" id="fsEdit"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75zM20.7 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"></path></svg></button>
   </div>
   <div class="tap" id="fsTap"><div class="big" id="fsVal">0</div><div class="hint" id="fsHint">Tocca per aumentare</div></div>
   <div class="fb"><button id="fsMinus">−</button><button id="fsReset">⟲</button><button id="fsPlus">+</button></div>
@@ -451,5 +478,6 @@ if(!S.counters.length&&!S.seeded){S.seeded=true;
 render();
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
